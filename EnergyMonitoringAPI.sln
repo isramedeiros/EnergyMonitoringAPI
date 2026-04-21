@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnergyMonitoringAPI", "EnergyMonitoringAPI\EnergyMonitoringAPI.csproj", "{440AC47D-3FEC-61E4-4DE5-2CC4A3524D0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnergyMonitoringAPI.Tests", "EnergyMonitoringAPI.Tests\EnergyMonitoringAPI.Tests.csproj", "{66B761B4-43DA-9C5C-2361-E706DEDC3DB3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{440AC47D-3FEC-61E4-4DE5-2CC4A3524D0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{440AC47D-3FEC-61E4-4DE5-2CC4A3524D0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{440AC47D-3FEC-61E4-4DE5-2CC4A3524D0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{440AC47D-3FEC-61E4-4DE5-2CC4A3524D0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66B761B4-43DA-9C5C-2361-E706DEDC3DB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66B761B4-43DA-9C5C-2361-E706DEDC3DB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66B761B4-43DA-9C5C-2361-E706DEDC3DB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66B761B4-43DA-9C5C-2361-E706DEDC3DB3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FFFBB677-0366-4EB9-9D83-767D6FCA6F40}
+	EndGlobalSection
+EndGlobal

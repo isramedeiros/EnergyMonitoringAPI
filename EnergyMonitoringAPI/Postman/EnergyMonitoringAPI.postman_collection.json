@@ -1,0 +1,325 @@
+{
+	"info": {
+		"_postman_id": "energy-monitoring-api",
+		"name": "Energy Monitoring API - FIAP",
+		"description": "Coleção completa para testar a API de Monitoramento de Energia",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"jwt_token\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"email\": \"admin@fiap.com\",\n  \"password\": \"Admin123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"register"
+							]
+						},
+						"description": "Registra um novo usuário no sistema"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"jwt_token\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Admin123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"login"
+							]
+						},
+						"description": "Faz login e retorna o token JWT"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Energy Readings",
+			"item": [
+				{
+					"name": "List All (Paginated)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/EnergyReadings?page=1&pageSize=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"EnergyReadings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Lista todas as leituras com paginação"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Reading",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"deviceId\": \"SENSOR-001\",\n  \"location\": \"Prédio Principal - Andar 3\",\n  \"energyConsumption\": 245.50,\n  \"powerDemand\": 45.8,\n  \"energySource\": \"Grid\",\n  \"costPerKWh\": 0.75\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/EnergyReadings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"EnergyReadings"
+							]
+						},
+						"description": "Cria uma nova leitura de energia"
+					},
+					"response": []
+				},
+				{
+					"name": "Get By ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/EnergyReadings/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"EnergyReadings",
+								"1"
+							]
+						},
+						"description": "Busca uma leitura específica por ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Device",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/EnergyReadings/device/SENSOR-001",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"EnergyReadings",
+								"device",
+								"SENSOR-001"
+							]
+						},
+						"description": "Busca leituras por dispositivo"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Analytics",
+			"item": [
+				{
+					"name": "Consumption Analysis",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Analytics/consumption",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Analytics",
+								"consumption"
+							]
+						},
+						"description": "Retorna análise de consumo no período"
+					},
+					"response": []
+				},
+				{
+					"name": "Consumption Analysis (Custom Period)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Analytics/consumption?startDate=2024-11-01&endDate=2024-12-01",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Analytics",
+								"consumption"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2024-11-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-12-01"
+								}
+							]
+						},
+						"description": "Análise de consumo com período customizado"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://localhost:5066"
+		}
+	]
+}
