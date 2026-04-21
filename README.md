@@ -54,6 +54,8 @@ API REST para monitoramento e otimização de consumo energético, alinhada a in
 
 O fluxo está definido em [`.github/workflows/ci-cd.yml`](../.github/workflows/ci-cd.yml) na raiz da solução.
 
+![Image #1 — Execução do pipeline no GitHub Actions: job Build e testes e demais jobs de deploy](assets/image.png)
+
 1. **Gatilhos:** `push` e *pull request* na branch `main`, e execução manual (`workflow_dispatch`). Execuções concorrentes na mesma ref cancelam a anterior (`concurrency`), evitando deploys duplicados.
 
 2. **Job *Build e testes* (`build-and-test`):**
