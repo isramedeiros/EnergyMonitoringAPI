@@ -1,0 +1,102 @@
+# CI/CD: build → testes automatizados → deploy staging → deploy produção
+#
+# Configuração (GitHub → Settings → Environments):
+#   1. Crie os ambientes "staging" e "production".
+#   2. Em cada ambiente, adicione os secrets:
+#        AZURE_WEBAPP_NAME          → nome do App Service (ex.: energy-api-staging)
+#        AZURE_WEBAPP_PUBLISH_PROFILE → conteúdo completo do ficheiro .PublishSettings
+#   3. (Opcional) Em "production", ative "Required reviewers" para aprovação manual antes do deploy.
+#
+# Azure: dois App Services (ou um app com dois slots). Faça download do perfil de publicação
+# em cada recurso: Portal → App Service → Download publish profile.
+
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build e testes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restaurar dependências
+        run: dotnet restore EnergyMonitoringAPI.sln
+
+      - name: Build (Release)
+        run: dotnet build EnergyMonitoringAPI.sln --no-restore --configuration Release
+
+      - name: Testes automatizados
+        run: dotnet test EnergyMonitoringAPI.sln --no-build --configuration Release --verbosity normal
+
+      - name: Publicar aplicação web
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: dotnet publish EnergyMonitoringAPI/EnergyMonitoringAPI.csproj --no-build --configuration Release -o "${{ github.workspace }}/publish"
+
+      - name: Guardar artefacto para deploy
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: webapp-publish
+          path: publish/
+
+  deploy-staging:
+    name: Deploy — staging
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment:
+      name: staging
+    steps:
+      - name: Transferir artefacto
+        uses: actions/download-artifact@v4
+        with:
+          name: webapp-publish
+          path: publish
+
+      - name: Azure Web App (staging)
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: publish
+
+  deploy-production:
+    name: Deploy — produção
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment:
+      name: production
+    steps:
+      - name: Transferir artefacto
+        uses: actions/download-artifact@v4
+        with:
+          name: webapp-publish
+          path: publish
+
+      - name: Azure Web App (produção)
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: publish

@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -7,11 +6,11 @@ using EnergyMonitoringAPI.ViewModels;
 
 namespace EnergyMonitoringAPI.Tests
 {
-    public class AnalyticsControllerTests : IClassFixture<WebApplicationFactory<Program>>
+    public class AnalyticsControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
         private readonly HttpClient _client;
 
-        public AnalyticsControllerTests(WebApplicationFactory<Program> factory)
+        public AnalyticsControllerTests(CustomWebApplicationFactory factory)
         {
             _client = factory.CreateClient();
         }
